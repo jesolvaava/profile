@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: your-app-name
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: SUPABASE_URL
+        fromDatabase:
+          name: supabase-creds
+          property: connection_url
+      - key: SUPABASE_KEY
+        fromDatabase:
+          name: supabase-creds
+          property: api_key
