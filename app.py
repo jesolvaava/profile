@@ -725,7 +725,7 @@ profile_page = """
           <!-- Location -->
           <div class="detail-card animate__animated animate__fadeInLeft">
             <h3 class="detail-title"><i class="fas fa-map-marker-alt"></i> Location</h3>
-            <p><i class="fas fa-city"></i> Ernakulam, Kerala, India</p>
+            <p><i class="fas fa-city"></i> KL44, Ernakulam, Kerala, India</p>
             <div id="map" style="height: 200px; width: 100%; border-radius: 8px; margin-top: 1rem; background: rgba(255,255,255,0.1);"></div>
           </div>
         </div>
