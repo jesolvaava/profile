@@ -1,29 +1,38 @@
-from flask import send_from_directory
 import os
 from flask import Flask, request, redirect, render_template_string
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
 
-# Supabase credentials from your .env file
+# Supabase configuration
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-# Create the Supabase client
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+# Check if environment variables are loaded
+if not SUPABASE_URL or not SUPABASE_KEY:
+    print("ERROR: Supabase credentials not found in environment variables!")
+    print("Make sure you have a .env file with SUPABASE_URL and SUPABASE_KEY")
+else:
+    print("Supabase credentials loaded successfully")
 
-# Modern HTML templates with animations
+try:
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+    print("Supabase client created successfully")
+except Exception as e:
+    print(f"Error creating Supabase client: {e}")
+    supabase = None
+
+# Home page template
 home_page = """
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome | Digital Gateway</title>
+  <title>Welcome to My Profile</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
@@ -109,21 +118,6 @@ home_page = """
       transform: translateY(-3px);
     }
     
-    .btn-primary::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: 0.5s;
-    }
-    
-    .btn-primary:hover::after {
-      left: 100%;
-    }
-    
     .title {
       font-weight: 700;
       background: linear-gradient(90deg, #6366f1, #a855f7);
@@ -152,33 +146,6 @@ home_page = """
       100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
     }
     
-    .social-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--glass-bg);
-      color: white;
-      margin: 0 10px;
-      font-size: 1.25rem;
-      transition: all 0.3s ease;
-      border: 1px solid var(--glass-border);
-    }
-    
-    .social-icon:hover {
-      background: var(--primary-color);
-      transform: translateY(-5px) scale(1.1);
-      color: white;
-    }
-    
-    .feature-icon {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: var(--primary-color);
-    }
-    
     .divider {
       height: 3px;
       width: 80px;
@@ -199,7 +166,7 @@ home_page = """
           <div class="text-center mb-4">
             <i class="fas fa-user-circle feature-icon floating"></i>
             <h1 class="title display-4">Welcome</h1>
-            <p class="mb-4">Enter your Gmail to access exclusive content</p>
+            <p class="mb-4">Enter your name to view my profile</p>
             <div class="divider"></div>
           </div>
           
@@ -207,9 +174,9 @@ home_page = """
             <div class="mb-4">
               <div class="input-group">
                 <span class="input-group-text bg-transparent text-white border-end-0">
-                  <i class="fas fa-envelope"></i>
+                  <i class="fas fa-user"></i>
                 </span>
-                <input type="email" name="email" class="form-control border-start-0" placeholder="your.email@gmail.com" required>
+                <input type="text" name="name" class="form-control border-start-0" placeholder="Your Name" required>
               </div>
             </div>
             
@@ -339,19 +306,6 @@ home_page = """
       },
       "retina_detect": true
     });
-    
-    // Add animation class when element is in viewport
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate__animated', 'animate__fadeInUp');
-        }
-      });
-    }, { threshold: 0.1 });
-    
-    document.querySelectorAll('.glass-card').forEach(card => {
-      observer.observe(card);
-    });
   </script>
 </body>
 </html>
@@ -376,6 +330,8 @@ profile_page = """
     :root {
       --primary-color: #6366f1;
       --primary-dark: #4f46e5;
+      --whatsapp-green: #25D366;
+      --whatsapp-dark: #128C7E;
       --text-light: #e2e8f0;
       --glass-bg: rgba(255, 255, 255, 0.1);
       --glass-border: rgba(255, 255, 255, 0.2);
@@ -574,6 +530,17 @@ profile_page = """
       margin: 1.5rem auto;
       border-radius: 3px;
     }
+    
+    .welcome-message {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+    
+    .welcome-name {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
   </style>
 </head>
 <body>
@@ -583,11 +550,13 @@ profile_page = """
   <div class="profile-container">
     <div class="container">
       <div class="profile-header animate__animated animate__fadeIn">
-        <!-- CHANGE THIS URL TO YOUR OWN PHOTO -->
         <img src="https://res.cloudinary.com/dn4w0lvba/image/upload/v1749572617/6179377016390926731_rqzbq0.jpg" 
              alt="Profile Picture" class="profile-avatar floating">
         <h1 class="profile-name">Jesol Paul</h1>
         <p class="profile-title">Digital Creator & Developer</p>
+        <div class="welcome-message">
+          Welcome, <span class="welcome-name">{{ name }}</span>! Thanks for visiting my profile.
+        </div>
         <div class="divider"></div>
       </div>
       
@@ -616,9 +585,8 @@ profile_page = """
               </div>
             </div>
             
-            <!-- NEW WHATSAPP SECTION -->
-            <div class="contact-item">
-              <div class="contact-icon">
+            <div class="contact-item whatsapp-item">
+              <div class="contact-icon whatsapp-icon">
                 <i class="fab fa-whatsapp"></i>
               </div>
               <div class="contact-text">
@@ -687,10 +655,6 @@ profile_page = """
       </div>
       
       <div class="social-links">
-        <!-- ADDED WHATSAPP ICON -->
-        <a href="https://wa.me/917994422545" class="social-icon" target="_blank">
-          <i class="fab fa-whatsapp"></i>
-        </a>
         <a href="https://t.me/jesolizm" class="social-icon" target="_blank">
           <i class="fab fa-telegram"></i>
         </a>
@@ -702,6 +666,16 @@ profile_page = """
         </a>
         <a href="https://www.linkedin.com/in/jesol-paul-761387317/" class="social-icon" target="_blank">
           <i class="fab fa-facebook"></i>
+        </a>
+        <a href="https://wa.me/917994422545" class="social-icon whatsapp-btn" target="_blank">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </div>
+      
+      <!-- WhatsApp Floating Button -->
+      <div class="position-fixed bottom-0 end-0 m-4">
+        <a href="https://wa.me/917994422545" class="btn btn-success btn-lg rounded-pill shadow-lg whatsapp-btn pulse" target="_blank">
+          <i class="fab fa-whatsapp me-2"></i> Chat on WhatsApp
         </a>
       </div>
     </div>
@@ -818,19 +792,6 @@ profile_page = """
       },
       "retina_detect": true
     });
-    
-    // Add animation class when element is in viewport
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate__animated', 'animate__fadeInUp');
-        }
-      });
-    }, { threshold: 0.1 });
-    
-    document.querySelectorAll('.glass-card').forEach(card => {
-      observer.observe(card);
-    });
   </script>
 </body>
 </html>
@@ -842,22 +803,56 @@ def home():
 
 @app.route("/submit", methods=["POST"])
 def submit():
-    email = request.form.get("email", "").strip()
-    if not email.endswith("@gmail.com"):
-        return "Please enter a valid Gmail address.", 400
+    name = request.form.get("name", "").strip()
+    if not name:
+        return "Please enter your name.", 400
+
+    # Check if Supabase is configured
+    if not supabase:
+        print("WARNING: Supabase not configured, proceeding without database save")
+        # Still show the profile page even if database isn't working
+        return render_template_string(profile_page.replace("{{ name }}", name))
 
     try:
-        response = supabase.table("visitors").insert({"email": email}).execute()
-        print("Supabase response:", response)
-        return redirect("/profile")
+        # Test the connection first
+        print(f"Attempting to save visitor: {name}")
+        
+        # Insert the name into the "visitors" table in Supabase
+        response = supabase.table("visitors").insert({"name": name}).execute()
+        
+        print("Supabase response data:", response.data)
+        print("Supabase response count:", response.count)
+        
+        # Check if there was an error in the response
+        if hasattr(response, 'error') and response.error:
+            print("Supabase error:", response.error)
+            raise Exception(f"Supabase error: {response.error}")
+        
+        print(f"Successfully saved visitor: {name}")
+        
+        # Render profile page with the visitor's name
+        return render_template_string(profile_page.replace("{{ name }}", name))
+        
     except Exception as e:
-        print("Error saving your email:", e)
-        return "Error saving your email. Please try again.", 500
+        print(f"Detailed error saving visitor '{name}': {e}")
+        print(f"Error type: {type(e)}")
+        
+        # Still show the profile page even if database save fails
+        print("Proceeding without database save due to error")
+        return render_template_string(profile_page.replace("{{ name }}", name))
 
-@app.route("/profile")
-def profile():
-    return render_template_string(profile_page)
+@app.route("/test-db")
+def test_db():
+    """Test route to check Supabase connection"""
+    if not supabase:
+        return "Supabase client not initialized. Check your environment variables."
+    
+    try:
+        # Try to fetch from the visitors table
+        response = supabase.table("visitors").select("*").limit(1).execute()
+        return f"Database connection successful! Response: {response.data}"
+    except Exception as e:
+        return f"Database connection failed: {e}"
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 3000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(port=3000, debug=True)
