@@ -10,6 +10,7 @@ app = Flask(__name__)
 # Supabase configuration
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Check if environment variables are loaded
 if not SUPABASE_URL or not SUPABASE_KEY:
@@ -807,76 +808,21 @@ def submit():
     if not name:
         return "Please enter your name.", 400
 
-    # Check if Supabase is configured
-    if not supabase:
-        print("WARNING: Supabase not configured, proceeding without database save")
-        # Still show the profile page even if database isn't working
-        return render_template_string(profile_page.replace("{{ name }}", name))
-
     try:
-        # Test the connection first
-        print(f"Attempting to save visitor: {name}")
+        # Insert the name into the "visitors" table in Supabase
+        response = supabase.table("visitors").insert({"name": name}).execute()
         
-        # Try different table structures - first try with just name
-        try:
-            response = supabase.table("visitors").insert({"name": name}).execute()
-            print("Insert with 'name' field successful")
-        except Exception as e1:
-            print(f"Failed with 'name' field: {e1}")
-            # Try with visitor_name field
-            try:
-                response = supabase.table("visitors").insert({"visitor_name": name}).execute()
-                print("Insert with 'visitor_name' field successful")
-            except Exception as e2:
-                print(f"Failed with 'visitor_name' field: {e2}")
-                # Try creating the table if it doesn't exist
-                try:
-                    # First check what tables exist
-                    tables_response = supabase.table("information_schema.tables").select("table_name").eq("table_schema", "public").execute()
-                    print(f"Available tables: {tables_response.data}")
-                    
-                    # Try with timestamp
-                    from datetime import datetime
-                    response = supabase.table("visitors").insert({
-                        "name": name,
-                        "created_at": datetime.now().isoformat()
-                    }).execute()
-                    print("Insert with name and timestamp successful")
-                except Exception as e3:
-                    print(f"All insert attempts failed: {e3}")
-                    raise e3
-        
-        print("Supabase response data:", response.data)
-        
-        # Check the actual response structure
-        if hasattr(response, 'data') and response.data:
-            print(f"Successfully saved visitor: {name}")
+        if response.data:
+            print("Successfully stored name:", name)
+            # Render profile page with the visitor's name
+            return render_template_string(profile_page.replace("{{ name }}", name))
         else:
-            print("Warning: Insert may have failed - no data returned")
-        
-        # Render profile page with the visitor's name
-        return render_template_string(profile_page.replace("{{ name }}", name))
-        
+            print("Failed to store name. Response:", response)
+            return "Error saving your name. Please try again.", 500
+            
     except Exception as e:
-        print(f"Detailed error saving visitor '{name}': {e}")
-        print(f"Error type: {type(e)}")
-        
-        # Still show the profile page even if database save fails
-        print("Proceeding without database save due to error")
-        return render_template_string(profile_page.replace("{{ name }}", name))
-
-@app.route("/test-db")
-def test_db():
-    """Test route to check Supabase connection"""
-    if not supabase:
-        return "Supabase client not initialized. Check your environment variables."
-    
-    try:
-        # Try to fetch from the visitors table
-        response = supabase.table("visitors").select("*").limit(1).execute()
-        return f"Database connection successful! Response: {response.data}"
-    except Exception as e:
-        return f"Database connection failed: {e}"
+        print("Error saving your name:", e)
+        return "Error processing your request. Please try again.", 500
 
 if __name__ == "__main__":
     app.run(port=3000, debug=True)
