@@ -550,7 +550,7 @@ profile_page = """
   <div class="profile-container">
     <div class="container">
       <div class="profile-header animate__animated animate__fadeIn">
-        <img src="https://res.cloudinary.com/dn4w0lvba/image/upload/v1749572617/6179377016390926731_rqzbq0.jpg" 
+        <img src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
              alt="Profile Picture" class="profile-avatar floating">
         <h1 class="profile-name">Jesol Paul</h1>
         <p class="profile-title">Digital Creator & Developer</p>
