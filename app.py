@@ -1042,7 +1042,7 @@ profile_page = """
       }).addTo(map);
       
       L.marker([9.9816, 76.2999]).addTo(map)
-        .bindPopup('Ernakulam, Kerala, India')
+        .bindPopup('KL44,Ernakulam, Kerala, India')
         .openPopup();
     });
   </script>
