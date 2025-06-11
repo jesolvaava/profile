@@ -542,6 +542,133 @@ profile_page = """
       font-weight: 600;
       color: var(--primary-color);
     }
+  .about-section {
+      margin-bottom: 3rem;
+    }
+    
+    .detail-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease;
+    }
+    
+    .detail-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+    
+    .detail-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+    }
+    
+    .detail-title i {
+      margin-right: 10px;
+    }
+    
+    .skills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 1rem;
+    }
+    
+    .skill-pill {
+      background: rgba(99, 102, 241, 0.2);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+    
+    .skill-pill:hover {
+      background: var(--primary-color);
+      transform: scale(1.05);
+    }
+    
+    .interests-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    
+    .interest-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 80px;
+    }
+    
+    .interest-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(99, 102, 241, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      transition: all 0.3s ease;
+    }
+    
+    .interest-item:hover .interest-icon {
+      background: var(--primary-color);
+      color: white;
+      transform: scale(1.1);
+    }
+    
+    .timeline {
+      position: relative;
+      padding-left: 30px;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--primary-color);
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 5px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--primary-color);
+    }
+    
+    .timeline-date {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.7);
+    }
+    
+    .timeline-content {
+      background: rgba(255,255,255,0.05);
+      padding: 1rem;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -560,6 +687,115 @@ profile_page = """
         </div>
         <div class="divider"></div>
       </div>
+      <div class="profile-container">
+    <div class="container">
+      <!-- [Previous profile header remains the same] -->
+      
+      <!-- About Me Section -->
+      <div class="row about-section">
+        <div class="col-lg-12">
+          <div class="glass-card animate__animated animate__fadeIn">
+            <h2 class="section-title">About Me</h2>
+            <p>Hello! I'm Jesol Paul, a passionate developer and digital marketer based in Ernakulam, India. 
+            I love creating innovative solutions and exploring new technologies. When I'm not coding, you can 
+            find me playing chess or learning new marketing strategies.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-6">
+          <!-- [Previous contact information remains the same] -->
+          
+          <!-- Education -->
+          <div class="detail-card animate__animated animate__fadeInLeft">
+            <h3 class="detail-title"><i class="fas fa-graduation-cap"></i> Education</h3>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-date">2020 - 2023</div>
+                <div class="timeline-content">
+                  <h5>Bachelor of Computer Applications (BCA)</h5>
+                  <p>Completed with honors from MG University, Kerala</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Location -->
+          <div class="detail-card animate__animated animate__fadeInLeft">
+            <h3 class="detail-title"><i class="fas fa-map-marker-alt"></i> Location</h3>
+            <p><i class="fas fa-city"></i> Ernakulam, Kerala, India</p>
+            <div id="map" style="height: 200px; width: 100%; border-radius: 8px; margin-top: 1rem; background: rgba(255,255,255,0.1);"></div>
+          </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div class="col-lg-6">
+          <!-- Technical Skills -->
+          <div class="detail-card animate__animated animate__fadeInRight">
+            <h3 class="detail-title"><i class="fas fa-code"></i> Technical Skills</h3>
+            <div class="skills-container">
+              <span class="skill-pill">C</span>
+              <span class="skill-pill">C++</span>
+              <span class="skill-pill">Python</span>
+              <span class="skill-pill">Java</span>
+              <span class="skill-pill">Django</span>
+              <span class="skill-pill">PHP</span>
+              <span class="skill-pill">HTML/CSS</span>
+              <span class="skill-pill">JavaScript</span>
+              <span class="skill-pill">SQL</span>
+              <span class="skill-pill">Flask</span>
+              <span class="skill-pill">Git</span>
+            </div>
+          </div>
+          
+          <!-- Interests -->
+          <div class="detail-card animate__animated animate__fadeInRight">
+            <h3 class="detail-title"><i class="fas fa-heart"></i> Interests</h3>
+            <div class="interests-container">
+              <div class="interest-item">
+                <div class="interest-icon">
+                  <i class="fas fa-chess"></i>
+                </div>
+                <span>Chess</span>
+              </div>
+              <div class="interest-item">
+                <div class="interest-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <span>Digital Marketing</span>
+              </div>
+              <div class="interest-item">
+                <div class="interest-icon">
+                  <i class="fas fa-music"></i>
+                </div>
+                <span>Music</span>
+              </div>
+              <div class="interest-item">
+                <div class="interest-icon">
+                  <i class="fas fa-book"></i>
+                </div>
+                <span>Reading</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Digital Marketing -->
+          <div class="detail-card animate__animated animate__fadeInRight">
+            <h3 class="detail-title"><i class="fas fa-bullhorn"></i> Digital Marketing</h3>
+            <p>Experienced in SEO, Social Media Marketing, and Content Strategy with proven results in increasing online presence and engagement.</p>
+            <div class="skills-container" style="margin-top: 1rem;">
+              <span class="skill-pill">SEO</span>
+              <span class="skill-pill">Social Media</span>
+              <span class="skill-pill">Content Strategy</span>
+              <span class="skill-pill">Google Analytics</span>
+              <span class="skill-pill">Ads</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       
       <div class="row">
         <div class="col-lg-6">
@@ -792,6 +1028,22 @@ profile_page = """
         }
       },
       "retina_detect": true
+    });
+ <!-- Add Leaflet.js for map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script>
+    // Initialize map (Ernakulam, India)
+    document.addEventListener('DOMContentLoaded', function() {
+      const map = L.map('map').setView([9.9816, 76.2999], 12);
+      
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      
+      L.marker([9.9816, 76.2999]).addTo(map)
+        .bindPopup('Ernakulam, Kerala, India')
+        .openPopup();
     });
   </script>
 </body>
