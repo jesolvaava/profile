@@ -678,7 +678,7 @@ profile_page = """
   <div class="profile-container">
     <div class="container">
       <div class="profile-header animate__animated animate__fadeIn">
-        <img src="https://res.cloudinary.com/dn4w0lvba/image/upload/v1749572617/6179377016390926731_rqzbq0.jpg" 
+        <img src="https://res.cloudinary.com/dn4w0lvba/image/upload/v1749621716/6310049777169057704_qhatih.jpg" 
              alt="Profile Picture" class="profile-avatar floating">
         <h1 class="profile-name">Jesol Paul</h1>
         <p class="profile-title">Digital Creator & Developer</p>
