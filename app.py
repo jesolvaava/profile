@@ -713,7 +713,7 @@ profile_page = """
             <h3 class="detail-title"><i class="fas fa-graduation-cap"></i> Education</h3>
             <div class="timeline">
               <div class="timeline-item">
-                <div class="timeline-date">2020 - 2023</div>
+                <div class="timeline-date">2022 - 2025</div>
                 <div class="timeline-content">
                   <h5>Bachelor of Computer Applications (BCA)</h5>
                   <p>Completed with honors from MG University, Kerala</p>
