@@ -550,7 +550,7 @@ profile_page = """
   <div class="profile-container">
     <div class="container">
       <div class="profile-header animate__animated animate__fadeIn">
-        <img src="https://res.cloudinary.com/dn4w0lvba/image/upload/v1749621716/6310049777169057704_qhatih.jpg" 
+        <img src="https://res.cloudinary.com/dn4w0lvba/image/upload/v1749572617/6179377016390926731_rqzbq0.jpg" 
              alt="Profile Picture" class="profile-avatar floating">
         <h1 class="profile-name">Jesol Paul</h1>
         <p class="profile-title">Digital Creator & Developer</p>
@@ -817,18 +817,42 @@ def submit():
         # Test the connection first
         print(f"Attempting to save visitor: {name}")
         
-        # Insert the name into the "visitors" table in Supabase
-        response = supabase.table("visitors").insert({"name": name}).execute()
+        # Try different table structures - first try with just name
+        try:
+            response = supabase.table("visitors").insert({"name": name}).execute()
+            print("Insert with 'name' field successful")
+        except Exception as e1:
+            print(f"Failed with 'name' field: {e1}")
+            # Try with visitor_name field
+            try:
+                response = supabase.table("visitors").insert({"visitor_name": name}).execute()
+                print("Insert with 'visitor_name' field successful")
+            except Exception as e2:
+                print(f"Failed with 'visitor_name' field: {e2}")
+                # Try creating the table if it doesn't exist
+                try:
+                    # First check what tables exist
+                    tables_response = supabase.table("information_schema.tables").select("table_name").eq("table_schema", "public").execute()
+                    print(f"Available tables: {tables_response.data}")
+                    
+                    # Try with timestamp
+                    from datetime import datetime
+                    response = supabase.table("visitors").insert({
+                        "name": name,
+                        "created_at": datetime.now().isoformat()
+                    }).execute()
+                    print("Insert with name and timestamp successful")
+                except Exception as e3:
+                    print(f"All insert attempts failed: {e3}")
+                    raise e3
         
         print("Supabase response data:", response.data)
-        print("Supabase response count:", response.count)
         
-        # Check if there was an error in the response
-        if hasattr(response, 'error') and response.error:
-            print("Supabase error:", response.error)
-            raise Exception(f"Supabase error: {response.error}")
-        
-        print(f"Successfully saved visitor: {name}")
+        # Check the actual response structure
+        if hasattr(response, 'data') and response.data:
+            print(f"Successfully saved visitor: {name}")
+        else:
+            print("Warning: Insert may have failed - no data returned")
         
         # Render profile page with the visitor's name
         return render_template_string(profile_page.replace("{{ name }}", name))
