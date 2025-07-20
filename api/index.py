@@ -1076,7 +1076,6 @@ def submit():
         print("Error saving your name:", e)
         return "Error processing your request. Please try again.", 500
 
-if __name__ == "__main__":
-    app.run(port=3000, debug=True)
+
 
 handler = app
